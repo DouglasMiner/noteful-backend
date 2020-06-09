@@ -4,12 +4,13 @@ const FoldersService = {
   },
 
   insertFolder(knex, newFolder) {
+    console.log(newFolder)
     return knex
       .insert(newFolder)
       .into("noteful_folders")
       .returning("*")
-      .then((rows) => {
-        return rows[0];
+      .then(([rows]) => {
+        return rows;
       });
   },
 

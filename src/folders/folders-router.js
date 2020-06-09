@@ -17,8 +17,8 @@ foldersRouter
   .post(jsonParser, (req, res, next) => {
     const { name } = req.body;
     const newFolder = { name };
-
-    if (newFolder.name == null)
+    console.log(newFolder)
+    if (newFolder.name === null)
       return res
         .status(400)
         .json({
@@ -28,9 +28,7 @@ foldersRouter
     FoldersService.insertFolder(req.app.get("db"), newFolder)
       .then((folder) => {
         res
-          .status(201)
-          .location(`/folders/${note.id}`)
-          .json(folder);
+          .status(201).json('posted')
       })
       .catch(next);
   })
