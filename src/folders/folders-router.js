@@ -26,9 +26,10 @@ foldersRouter
         });
 
     FoldersService.insertFolder(req.app.get('db'), newFolder)
-      .then(() => {
+      .then((data) => {
+        console.log(data)
         res
-          .status(201).json('posted');
+          .status(201).json(data);
       })
       .catch(next);
   });

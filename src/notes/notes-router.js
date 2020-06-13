@@ -15,6 +15,7 @@ notesRouter
       .catch(next);
   })
   .post(jsonParser, (req, res, next) => {
+    console.log(req.body)
     const { name } = req.body;
     const newNote = { name };
 
