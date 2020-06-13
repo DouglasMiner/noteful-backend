@@ -27,9 +27,12 @@ foldersRouter
 
     FoldersService.insertFolder(req.app.get('db'), newFolder)
       .then((data) => {
-        console.log(data)
-        res
-          .status(201).json(data);
+        console.log('folders-router line 30', data)
+        let folder = {
+          id: data.id,
+          name: data.name
+        }
+        res.status(201).json(folder);
       })
       .catch(next);
   });
