@@ -14,10 +14,11 @@ notesRouter
       })
       .catch(next);
   })
-  .post(jsonParser, (req, res, next) => {
-    const { name, folderId, content } = req.body;
-    const newNote = { name, folderId, content };
 
+  .post(jsonParser, (req, res, next) => {
+    const { name, folderid, content } = req.body;
+    const newNote = { name, folderid, content };
+    console.log(folderid)
     for(const [key, value] of Object.entries(newNote))
       if(value === null) {
         return res.status(400).json({
@@ -27,6 +28,7 @@ notesRouter
 
     notesService.insertnote(req.app.get('db'), newNote)
       .then((note) => {
+        console.log(note);
         res
           .status(201)
           .location(`/notes/${note.id}`)
@@ -57,10 +59,13 @@ notesRouter
     res.json(res.note);
   })
   .delete((req, res, next) => {
+    console.log(req.params)
     notesService
       .deletenote(req.app.get('db'), req.params.note_id)
-      .then(numRowsAffected => {
-        res.status(204).end();
+      .then(() => {
+        res.status(204)
+          .location('/')
+          .end();
       })
       .catch(next);
   });
