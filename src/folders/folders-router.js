@@ -32,7 +32,7 @@ foldersRouter
           id: data.id,
           name: data.name
         }
-        res.status(201).json({'folder': folder});
+        res.status(201).json(folder);
       })
       .catch(next);
   });
