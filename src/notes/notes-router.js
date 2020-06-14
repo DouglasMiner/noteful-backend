@@ -1,13 +1,13 @@
-const express = require('express')
-const notesService = require('./notes-service')
+const express = require('express');
+const notesService = require('./notes-service');
 
-const notesRouter = express.Router()
-const jsonParser = express.json()
+const notesRouter = express.Router();
+const jsonParser = express.json();
 
 notesRouter
   .route('/')
   .get((req, res, next) => {
-    const knexInstance = req.app.get("db");
+    const knexInstance = req.app.get('db');
     notesService.getAllNotes(knexInstance)
       .then((notes) => {
         res.json(notes);
@@ -15,18 +15,17 @@ notesRouter
       .catch(next);
   })
   .post(jsonParser, (req, res, next) => {
-    console.log(req.body)
-    const { name } = req.body;
-    const newNote = { name };
+    const { name, folderId, modified, content } = req.body;
+    const newNote = { name, folderId, modified, content };
 
-    if (newNote.name == null)
-      return res
-        .status(400)
-        .json({
-          error: { message: "Missing name in request body" },
-        })
+    for(const [key, value] of Object.entries(newNote))
+      if(value === null) {
+        return res.status(400).json({
+          error: `${key} missing in request body`
+        });
+      }
 
-    notesService.insertnote(req.app.get("db"), newNote)
+    notesService.insertnote(req.app.get('db'), newNote)
       .then((note) => {
         res
           .status(201)
@@ -34,7 +33,7 @@ notesRouter
           .json(note);
       })
       .catch(next);
-  })
+  });
 
 notesRouter
   .route('/:note_id')
@@ -46,24 +45,24 @@ notesRouter
       .then(note => {
         if (!note) {
           return res.status(404).json({
-            error: { message: "note doesn't exist" },
-          })
+            error: { message: 'note doesn\'t exist' },
+          });
         }
-        res.note = note
-        next()
+        res.note = note;
+        next();
       })
-      .catch(next)
+      .catch(next);
   })
   .get((req, res, next) => {
-    res.json(note)
+    res.json(res.note);
   })
   .delete((req, res, next) => {
     notesService
-      .deletenote(req.app.get("db"), req.params.note_id)
+      .deletenote(req.app.get('db'), req.params.note_id)
       .then(numRowsAffected => {
-        res.status(204).end()
+        res.status(204).end();
       })
-      .catch(next)
-  })
+      .catch(next);
+  });
 
-module.exports = notesRouter
+module.exports = notesRouter;

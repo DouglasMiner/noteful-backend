@@ -17,7 +17,6 @@ foldersRouter
   .post(jsonParser, (req, res, next) => {
     const { name } = req.body;
     const newFolder = { name };
-    console.log(newFolder);
     if (newFolder.name === null)
       return res
         .status(400)
@@ -27,7 +26,6 @@ foldersRouter
 
     FoldersService.insertFolder(req.app.get('db'), newFolder)
       .then((data) => {
-        console.log('folders-router line 30', data)
         let folder = {
           id: data.id,
           name: data.name
